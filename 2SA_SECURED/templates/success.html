@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberheroes - Success</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .success-box {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px 35px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #48bb78;
+            margin-bottom: 20px;
+            animation: checkmark 0.8s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 28px;
+            color: #2d3748;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            color: #4a5568;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .trophy-icon {
+            font-size: 60px;
+            margin: 20px 0;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .flag-container {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.8);
+            }
+        }
+
+        .flag-label {
+            color: #a0aec0;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .flag-text {
+            color: #48bb78;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            user-select: all;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .back-btn:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            color: white;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(252, 129, 129, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .success-box {
+                padding: 30px 25px;
+            }
+            
+            .flag-text {
+                font-size: 16px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-box">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            
+            <h2 class="success-title">Login Successful!</h2>
+            <p class="success-message">Welcome to Cyberheroes Dashboard, {{ username }}! 🎉</p>
+            
+            <div class="trophy-icon">🏆</div>
+            
+            <div class="flag-container">
+                <div class="flag-label">
+                    <i class="fas fa-flag"></i> Capture The Flag
+                </div>
+                <div class="flag-text">{{ flag }}</div>
+            </div>
+            
+            <p style="color: #718096; font-size: 14px; margin-top: 15px;">
+                Congratulations! You've successfully captured the flag!
+            </p>
+            
+            <div class="button-group">
+                <a href="{{ url_for('login') }}" class="btn back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Login
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

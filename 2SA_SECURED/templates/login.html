@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberheroes - Secure Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-box {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px 35px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-section i {
+            font-size: 50px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .logo-section h1 {
+            font-size: 32px;
+            color: #2d3748;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #718096;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group label i {
+            margin-right: 5px;
+            color: #667eea;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #667eea;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flash-message.error {
+            background: #fff5f5;
+            border: 1px solid #fc8181;
+            color: #c53030;
+        }
+
+        .flash-message.warning {
+            background: #fffaf0;
+            border: 1px solid #f6ad55;
+            color: #c05621;
+        }
+
+        .flash-message.success {
+            background: #f0fff4;
+            border: 1px solid #68d391;
+            color: #2f855a;
+        }
+
+        .captcha-section {
+            margin-bottom: 25px;
+        }
+
+        .captcha-compact {
+            background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+            border: 2px solid #cbd5e0;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .captcha-image-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .captcha-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #667eea;
+        }
+
+        .captcha-image {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .captcha-angle-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            background: #fc8181;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .captcha-angle-indicator.correct {
+            background: #48bb78;
+        }
+
+        .captcha-controls {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .captcha-instruction {
+            color: #4a5568;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .rotation-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .rotate-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rotate-btn:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6b3fa0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        }
+
+        .rotate-btn:active {
+            transform: translateY(0);
+        }
+
+        .rotate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .captcha-status-compact {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            min-height: 18px;
+        }
+
+        .captcha-status-compact.success {
+            color: #38a169;
+        }
+
+        .captcha-status-compact.error {
+            color: #fc8181;
+        }
+
+        .reset-captcha-compact {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .reset-captcha-compact:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #4a5568;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #5568d3;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #5568d3;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 30px 25px;
+            }
+            
+            .logo-section h1 {
+                font-size: 26px;
+            }
+
+            .captcha-compact {
+                flex-direction: column;
+            }
+
+            .captcha-image-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .captcha-circle {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo-section">
+                <i class="fas fa-shield-alt"></i>
+                <h1>CYBERHEROES</h1>
+                <p class="tagline">Secure Authentication Portal</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">
+                                <i class="fas fa-{% if category == 'error' %}exclamation-circle{% elif category == 'warning' %}exclamation-triangle{% else %}check-circle{% endif %}"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+                <!-- Hidden CAPTCHA token from server - one-time use -->
+                <input type="hidden" id="captcha-token-field" name="captcha_token" value="{{ captcha_token }}">
+                
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        maxlength="50"
+                        {% if locked_out %}disabled{% endif %}
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            maxlength="128"
+                            {% if locked_out %}disabled{% endif %}
+                            required
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePassword()" {% if locked_out %}disabled{% endif %}>
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="captcha-section">
+                    <label>
+                        <i class="fas fa-sync-alt"></i> Rotate to Upright Position
+                    </label>
+                    <div class="captcha-compact">
+                        <div class="captcha-image-container">
+                            <div class="captcha-circle">
+                                <div class="captcha-image" id="captchaImage">
+                                    🔒
+                                </div>
+                            </div>
+                            <div class="captcha-angle-indicator" id="angleIndicator"></div>
+                        </div>
+                        
+                        <div class="captcha-controls">
+                            <div class="captcha-instruction">Rotate the icon upright</div>
+                            <div class="rotation-buttons">
+                                <button type="button" class="rotate-btn" onclick="rotateImage(-45)" title="Rotate Left" {% if locked_out %}disabled{% endif %}>
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button type="button" class="reset-captcha-compact" onclick="resetCaptcha()" {% if locked_out %}disabled{% endif %}>
+                                    <i class="fas fa-sync-alt"></i> Reset
+                                </button>
+                                <button type="button" class="rotate-btn" onclick="rotateImage(45)" title="Rotate Right" {% if locked_out %}disabled{% endif %}>
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                            <div class="captcha-status-compact" id="captchaStatus"></div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="captcha-verified" name="captcha" value="0">
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember" name="remember" value="1" {% if locked_out %}disabled{% endif %}>
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="submitBtn" {% if locked_out %}disabled{% endif %}>
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+
+            <div class="signup-link">
+                Don't have an account? <a href="#">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRotation = 0;
+        let targetRotation = 0;
+        let captchaVerified = false;
+        const tolerance = 22.5; // 22.5 degrees tolerance
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function initializeCaptcha() {
+            // Generate random rotation (multiples of 45 degrees, but not 0)
+            const rotations = [45, 90, 135, 180, 225, 270, 315];
+            targetRotation = rotations[Math.floor(Math.random() * rotations.length)];
+            currentRotation = targetRotation;
+            
+            const captchaImage = document.getElementById('captchaImage');
+            captchaImage.style.transform = `rotate(${currentRotation}deg)`;
+            
+            captchaVerified = false;
+            document.getElementById('captcha-verified').value = '0';
+            document.getElementById('submitBtn').disabled = true;
+            
+            updateIndicator();
+        }
+
+        function rotateImage(degrees) {
+            if (captchaVerified) return;
+            
+            // Simply add the degrees without modulo - this prevents the snap-back effect
+            currentRotation += degrees;
+            
+            const captchaImage = document.getElementById('captchaImage');
+            captchaImage.style.transform = `rotate(${currentRotation}deg)`;
+            
+            checkRotation();
+            updateIndicator();
+        }
+
+        function updateIndicator() {
+            const angleIndicator = document.getElementById('angleIndicator');
+            // Normalize the angle to 0-360 range for checking
+            const normalizedAngle = ((currentRotation % 360) + 360) % 360;
+            const isCorrect = normalizedAngle < tolerance || normalizedAngle > (360 - tolerance);
+            
+            if (isCorrect) {
+                angleIndicator.classList.add('correct');
+            } else {
+                angleIndicator.classList.remove('correct');
+            }
+        }
+
+        function checkRotation() {
+            // Normalize the angle to 0-360 range for checking upright position
+            const normalizedAngle = ((currentRotation % 360) + 360) % 360;
+            const isUpright = normalizedAngle < tolerance || normalizedAngle > (360 - tolerance);
+            
+            const captchaStatus = document.getElementById('captchaStatus');
+            
+            if (isUpright) {
+                captchaVerified = true;
+                document.getElementById('captcha-verified').value = '1';
+                document.getElementById('submitBtn').disabled = false;
+                
+                captchaStatus.className = 'captcha-status-compact success';
+                captchaStatus.innerHTML = '<i class="fas fa-check-circle"></i> Verified!';
+                
+                // Disable rotation buttons
+                const rotateButtons = document.querySelectorAll('.rotate-btn');
+                rotateButtons.forEach(btn => btn.disabled = true);
+            } else {
+                captchaStatus.className = 'captcha-status-compact';
+                captchaStatus.textContent = 'Keep rotating...';
+            }
+        }
+
+        function resetCaptcha() {
+            // Enable rotation buttons
+            const rotateButtons = document.querySelectorAll('.rotate-btn');
+            rotateButtons.forEach(btn => btn.disabled = false);
+            
+            const captchaStatus = document.getElementById('captchaStatus');
+            captchaStatus.textContent = '';
+            captchaStatus.className = 'captcha-status-compact';
+            
+            // Reset verification
+            captchaVerified = false;
+            document.getElementById('captcha-verified').value = '0';
+            document.getElementById('submitBtn').disabled = true;
+            
+            initializeCaptcha();
+        }
+
+        // Form submission validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            if (!captchaVerified) {
+                e.preventDefault();
+                const captchaStatus = document.getElementById('captchaStatus');
+                captchaStatus.className = 'captcha-status-compact error';
+                captchaStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please complete rotation!';
+            }
+        });
+
+        // Initialize on page load
+        window.onload = function() {
+            initializeCaptcha();
+        };
+    </script>
+</body>
+</html>
