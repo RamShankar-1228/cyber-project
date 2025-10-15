@@ -11,7 +11,7 @@ USERNAMES = ["admin"]
 MAX_TRIALS = 3100000       # safety cap on total attempts
 DELAY_SECONDS = 0.00001      # polite delay between attempts
 OUTPUT_FILE = "found_credentials.txt"
-PASSWORD_FILE ="password.txt"  # File containing passwords (one per line)
+PASSWORD_FILE ="Brute Force Project/password.txt"  # File containing passwords (one per line)
 # --------------------
 
 def load_passwords_from_file(filename: str) -> list:
